@@ -1,0 +1,174 @@
+{% extends 'admin/templates/template.html' %}
+{% load static %}
+{% block content %}
+    <form method="POST" enctype="multipart/form-data" action={% url "admin_create_product" %}>
+
+        {% csrf_token %}
+        <div class="row">
+
+            <div class="col-9">
+                <div class="content-header">
+                    <h2 class="content-title">Add New Product</h2>
+                    <div>
+                        <input type="submit" name="Publish" class="btn btn-md rounded font-sm hover-up">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Basic</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <label for="product_name" class="form-label">Product title</label>
+                            <input type="text" placeholder="Type here" class="form-control" id="product_name" name="name"/>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Full description</label>
+                            <textarea placeholder="Type here" class="form-control" rows="4" name="description"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="mb-4">
+                                    <label class="form-label">Regular price</label>
+                                    <div class="row gx-2">
+                                        <input placeholder="₹" type="text" class="form-control" name="mrp"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="mb-4">
+                                    <label class="form-label">Promotional price</label>
+                                    <input placeholder="₹" type="text" class="form-control" name="price"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <label class="form-label">Brand</label>
+                                <select class="form-select" name="brand">
+                                    {% for items in brand %}
+                                        <option value={{ items.id }}>{{ items.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- card end// -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between">
+                        <h4>Features</h4>
+                        <button id="add-field" class="btn btn-primary">+</button>
+
+                    </div>
+                    <div class="card-body">
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Title</label>
+                                    <input type="text" placeholder="Title" class="form-control" id="product_feature" name="product_feature[]"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Description</label>
+                                    <input type="text" placeholder="Description" class="form-control"
+                                           id="feature_description[]" name="feature_description[]"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="additional-fields"></div>
+                    </div>
+                </div>
+                <!-- card end// -->
+            </div>
+            <div class="col-lg-3">
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between">
+                        <h4>Media</h4>
+                        <button id="add-image" class="btn btn-primary">+</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="input-upload">
+                            <img src="../../templates%20files/Backend/assets/imgs/theme/upload.svg" alt=""/>
+                            <input class="form-control" type="file" name="product_image[]"/>
+                        </div>
+                        <div id="additional-images"></div>
+                    </div>
+                </div>
+                <!-- card end// -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Organization</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row gx-2">
+                            <div class="col-sm-6 mb-3">
+                                <label class="form-label">Category</label>
+                                <select class="form-select" name="category">
+                                    {% for items in category %}
+                                        <option value={{ items.id }}>{{ items.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                <label class="form-label">Sub-category</label>
+                                <select class="form-select" name="subcategory">
+                                    {% for items in subcategory %}
+                                        <option value={{ items.id }}>{{ items.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label for="product_name" class="form-label">Tags</label>
+                                <input type="text" class="form-control" name="tags"/>
+                            </div>
+                        </div>
+                        <!-- row.// -->
+                    </div>
+                </div>
+                <!-- card end// -->
+            </div>
+    </form>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#add-image").click(function (event) {
+                event.preventDefault(); // Prevent the default form submission behavior
+                var newFieldSet = `
+            <div class="input-upload">
+                <img src="../../templates%20files/Backend/assets/imgs/theme/upload.svg" alt=""/>
+                <input class="form-control" type="file" name="product_image[]"/>
+            </div>`;
+                $("#additional-images").append(newFieldSet);
+            });
+        });
+
+        $(document).ready(function () {
+            $("#add-field").click(function (event) {
+                event.preventDefault(); // Prevent the default form submission behavior
+                var newFieldSet = `
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="mb-4">
+                        <input type="text" placeholder="Title" class="form-control" name="product_feature[]"/>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="mb-4">
+                        <input type="text" placeholder="Description" class="form-control" name="feature_description[]"/>
+                    </div>
+                </div>
+            </div>`;
+                $("#additional-fields").append(newFieldSet);
+            });
+        });
+    </script>
+{% endblock %}

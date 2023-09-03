@@ -1,0 +1,110 @@
+{% extends "admin/templates/template.html" %}
+{% load static %}
+{% block content %}
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Brand</h2>
+            <p>Brand management</p>
+        </div>
+        <div>
+            <a href="#" class="btn btn-primary" id="addBrandBtn"><i class="text-muted material-icons md-post_add"></i>Add
+                New Brand</a>
+        </div>
+    </div>
+    <div class="modal fade" id="addBrandModal" tabindex="-1" role="dialog" aria-labelledby="addBrandModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addBrandModalLabel">Add New Brand</h5>
+                </div>
+                <div class="modal-body">
+                    <!-- Brand creation form -->
+                    <form id="addBrandForm" action="{% url 'admin_brand' %}" method="POST"
+                          enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label for="brand_name" class="form-label">Brand Name</label>
+                            <input type="text" class="form-control" id="brand_name" name="name" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="brand_image" class="form-label">Brand Image</label>
+                            <input type="file" class="form-control" id="brand_image" name="image" accept="image/*"
+                                   >
+                        </div>
+                        <div class="mb-4">
+                            <label for="category_select" class="form-label">Select Categories</label>
+                            <select multiple class="form-select" id="category_select" name="categories" style="height: 100%;" required>
+                                {% for item in category_list %}
+                                    <option value="{{ item.id }}">{{ item.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Description</label>
+                            <textarea placeholder="Type here" class="form-control" name="description"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card my-4">
+        <header class="card-header">
+            <div class="row gx-3">
+                <div class="col-lg-4 mb-lg-0 mb-15 me-auto">
+                    <input type="text" placeholder="Search..." class="form-control"/>
+                </div>
+            </div>
+        </header>
+        <!-- card-header end// -->
+        <div class="card-body">
+            <div class="row gx-3">
+                {% for item in brands %}
+                    <div class="col-xl-2 col-lg-3 col-md-4 col-6">
+                        <figure class="card border-1">
+                            <div class="card-header bg-white text-center">
+                                <img height="76" src="../../templates%20files/Backend/assets/imgs/brands/brand-1.jpg"
+                                     class="img-fluid" alt="Logo"/>
+                            </div>
+                            <figcaption class="card-body text-center">
+                                <h6 class="card-title m-0">{{ item.name }}</h6>
+                            </figcaption>
+                        </figure>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <!-- card-body end// -->
+    </div>
+{% endblock %}
+{% block script %}
+<!-- Include jQuery library if not already included -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    // Function to show the modal
+    function showModal() {
+        $('#addBrandModal').modal('show');
+    }
+
+    // Function to hide the modal
+    function hideModal() {
+        $('#addBrandModal').modal('hide');
+    }
+
+    // When the "Add New Brand" button is clicked, show the modal
+    $('#addBrandBtn').on('click', showModal);
+
+    // When the "Close" button inside the modal is clicked, hide the modal
+    $('#addBrandModal .btn-secondary').on('click', hideModal);
+</script>
+
+
+
+{% endblock %}
